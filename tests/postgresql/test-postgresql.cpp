@@ -15,6 +15,7 @@
 #include <cstring>
 #include <ctime>
 #include <cstdlib>
+#include <pg_config.h>
 
 using namespace soci;
 using namespace soci::tests;
@@ -176,6 +177,28 @@ TEST_CASE("PostgreSQL blob", "[postgresql][blob]")
         b.append(buf, sizeof(buf));
         CHECK(b.get_len() == 2 * sizeof(buf));
     }
+    {
+        blob b(sql);
+        sql << "select img from soci_test where id = 7", into(b);
+        CHECK(b.get_len() == 2 * sizeof(buf));
+        char buf2[100];
+        b.read_from_start(buf2, 10);
+        CHECK(std::strncmp(buf2, "abcdefghij", 10) == 0);
+    }
+#if PG_VERSION_NUM >= 80003
+    {
+        blob b(sql);
+        sql << "select img from soci_test where id = 7", into(b);
+        CHECK(b.get_len() == 2 * sizeof(buf));
+        b.trim(sizeof(buf));
+        CHECK(b.get_len() == sizeof(buf));
+    }
+    {
+        blob b(sql);
+        sql << "select img from soci_test where id = 7", into(b);
+        CHECK(b.get_len() == sizeof(buf));
+    }
+#endif
     {
         blob b(sql);
         sql << "select img from soci_test where id = 7", into(b);
