@@ -237,17 +237,16 @@ struct mysql_rowid_backend : details::rowid_backend
 
 class mysql_blob_backend : public details::trivial_blob_backend
 {
+public:
     mysql_blob_backend(mysql_session_backend &session);
 
     ~mysql_blob_backend() SOCI_OVERRIDE;
 
-    std::size_t get_len() SOCI_OVERRIDE;
-    std::size_t read_from_start(char *buf, std::size_t toRead, std::size_t offset = 0) SOCI_OVERRIDE;
-    std::size_t write_from_start(char const *buf, std::size_t toWrite, std::size_t offset = 0) SOCI_OVERRIDE;
-    std::size_t append(char const *buf, std::size_t toWrite) SOCI_OVERRIDE;
-    void trim(std::size_t newLen) SOCI_OVERRIDE;
+    std::size_t hex_str_size() const;
+    void write_hex_str(char *buf, std::size_t size) const;
+    std::string as_hex_str() const;
 
-    mysql_session_backend &session_;
+    void load_from_hex_str(const char* str, std::size_t length);
 };
 
 struct mysql_session_backend : details::session_backend
