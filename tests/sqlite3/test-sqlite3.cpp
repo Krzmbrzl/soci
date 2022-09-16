@@ -278,6 +278,16 @@ TEST_CASE("SQLite blob", "[sqlite][blob]")
     char buf[] = "abcdefghijklmnopqrstuvwxyz";
 
     {
+        // Read from default-constructed BLOB
+        blob b(sql);
+
+        CHECK(b.get_len() == 0);
+
+        char buf2[5];
+        std::size_t read = b.read(0, buf2, 5);
+        CHECK(read == 0);
+    }
+    {
         // empty, default-constructed BLOB
         blob b(sql);
         indicator ind;
