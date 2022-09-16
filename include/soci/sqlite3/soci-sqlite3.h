@@ -271,6 +271,8 @@ struct sqlite3_blob_backend : details::blob_backend
 
     const char *get_buffer() const;
 
+    void ensure_buffer_initialized();
+
 private:
     std::vector< char > buffer_;
 };
