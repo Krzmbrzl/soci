@@ -249,32 +249,13 @@ struct sqlite3_rowid_backend : details::rowid_backend
     unsigned long value_;
 };
 
-struct sqlite3_blob_backend : details::blob_backend
+struct sqlite3_blob_backend : details::trivial_blob_backend
 {
     sqlite3_blob_backend(sqlite3_session_backend &session);
 
-    ~sqlite3_blob_backend() SOCI_OVERRIDE;
-
-    std::size_t get_len() SOCI_OVERRIDE;
-
-    std::size_t read_from_start(char * buf, std::size_t toRead, std::size_t offset = 0) SOCI_OVERRIDE;
-
-    std::size_t write_from_start(const char * buf, std::size_t toWrite, std::size_t offset = 0) SOCI_OVERRIDE;
-
-    std::size_t append(char const *buf, std::size_t toWrite) SOCI_OVERRIDE;
-
-    void trim(std::size_t newLen) SOCI_OVERRIDE;
-
-    sqlite3_session_backend &session_;
-
-    std::size_t set_data(char const *buf, std::size_t toWrite);
-
-    const char *get_buffer() const;
+    ~sqlite3_blob_backend();
 
     void ensure_buffer_initialized();
-
-private:
-    std::vector< char > buffer_;
 };
 
 struct sqlite3_session_backend : details::session_backend

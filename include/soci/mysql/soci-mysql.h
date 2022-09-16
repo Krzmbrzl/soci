@@ -235,7 +235,7 @@ struct mysql_rowid_backend : details::rowid_backend
     ~mysql_rowid_backend() SOCI_OVERRIDE;
 };
 
-struct mysql_blob_backend : details::blob_backend
+class mysql_blob_backend : public details::trivial_blob_backend
 {
     mysql_blob_backend(mysql_session_backend &session);
 
