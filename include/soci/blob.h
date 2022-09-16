@@ -53,6 +53,8 @@ public:
     details::blob_backend * get_backend() { return backEnd_; }
 
 private:
+    SOCI_NOT_COPYABLE(blob)
+
     details::blob_backend * backEnd_;
 };
 
