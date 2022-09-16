@@ -269,7 +269,7 @@ struct sqlite3_blob_backend : details::blob_backend
 
     std::size_t set_data(char const *buf, std::size_t toWrite);
 
-    const char *get_buffer() const { return buffer_.data(); }
+    const char *get_buffer() const;
 
 private:
     std::vector< char > buffer_;
