@@ -9,6 +9,7 @@
 #define SOCI_BLOB_H_INCLUDED
 
 #include "soci/soci-platform.h"
+#include "soci/soci-config.h"
 // std
 #include <cstddef>
 
@@ -28,6 +29,11 @@ class SOCI_DECL blob
 public:
     explicit blob(session & s);
     ~blob();
+
+#ifdef SOCI_HAVE_CXX11
+    blob(blob &&other);
+    blob &operator=(blob &&other);
+#endif
 
     std::size_t get_len();
 
