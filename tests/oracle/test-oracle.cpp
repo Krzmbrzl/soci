@@ -129,15 +129,6 @@ TEST_CASE("Oracle blob", "[oracle][blob]")
     {
         blob b(sql);
 
-        oracle_session_backend *sessionBackEnd
-            = static_cast<oracle_session_backend *>(sql.get_backend());
-
-        oracle_blob_backend *blobBackEnd
-            = static_cast<oracle_blob_backend *>(b.get_backend());
-
-        OCILobDisableBuffering(sessionBackEnd->svchp_,
-            sessionBackEnd->errhp_, blobBackEnd->lobp_);
-
         sql << "select img from soci_test where id = 7", into(b);
         CHECK(b.get_len() == 0);
 
@@ -150,16 +141,6 @@ TEST_CASE("Oracle blob", "[oracle][blob]")
         //b.append(buf, sizeof(buf));
         //assert(b.get_len() == sizeof(buf) + 10);
         sql.commit();
-    }
-
-    {
-        blob b(sql);
-        sql << "select img from soci_test where id = 7", into(b);
-        //assert(b.get_len() == sizeof(buf) + 10);
-        CHECK(b.get_len() == 10);
-        char buf2[100];
-        b.read_from_start(buf2, 10);
-        CHECK(strncmp(buf2, "abcdefghij", 10) == 0);
     }
 }
 
