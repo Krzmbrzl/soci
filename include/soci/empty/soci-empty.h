@@ -138,9 +138,13 @@ struct empty_blob_backend : details::blob_backend
     ~empty_blob_backend() SOCI_OVERRIDE;
 
     std::size_t get_len() SOCI_OVERRIDE;
-    std::size_t read(std::size_t offset, char* buf, std::size_t toRead) SOCI_OVERRIDE;
-    std::size_t write(std::size_t offset, char const* buf, std::size_t toWrite) SOCI_OVERRIDE;
+
+    std::size_t read_from_start(char * buf, std::size_t toRead, std::size_t offset = 0) SOCI_OVERRIDE;
+
+    std::size_t write_from_start(const char * buf, std::size_t toWrite, std::size_t offset = 0) SOCI_OVERRIDE;
+
     std::size_t append(char const* buf, std::size_t toWrite) SOCI_OVERRIDE;
+
     void trim(std::size_t newLen) SOCI_OVERRIDE;
 
     empty_session_backend& session_;
