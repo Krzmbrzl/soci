@@ -284,7 +284,7 @@ TEST_CASE("SQLite blob", "[sqlite][blob]")
         CHECK(b.get_len() == 0);
 
         char buf2[5];
-        std::size_t read = b.read(0, buf2, 5);
+        std::size_t read = b.read_from_start(buf2, 5);
         CHECK(read == 0);
     }
     {
@@ -304,10 +304,10 @@ TEST_CASE("SQLite blob", "[sqlite][blob]")
         // Create new BLOB
         blob b(sql);
 
-        b.write(0, buf, sizeof(buf));
+        b.write_from_start(buf, sizeof(buf));
 
         char substr[20];
-        std::size_t i = b.read(0, substr, 3);
+        std::size_t i = b.read_from_start(substr, 3);
         substr[i] = '\0';
         CHECK(substr[0] == buf[0]);
         CHECK(substr[1] == buf[1]);
@@ -335,7 +335,7 @@ TEST_CASE("SQLite blob", "[sqlite][blob]")
         sql << "select img from soci_test where id = 7", into(b);
         CHECK(b.get_len() == 2 * sizeof(buf));
         char buf2[100];
-        b.read(0, buf2, 10);
+        b.read_from_start(buf2, 10);
         CHECK(std::strncmp(buf2, "abcdefghij", 10) == 0);
     }
     {
