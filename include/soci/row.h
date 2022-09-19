@@ -11,6 +11,7 @@
 #include "soci/type-holder.h"
 #include "soci/soci-backend.h"
 #include "soci/type-conversion.h"
+#include "soci/soci-config.h"
 // std
 #include <cstddef>
 #include <map>
@@ -42,6 +43,11 @@ class SOCI_DECL row
 public:
     row();
     ~row();
+
+#ifdef SOCI_HAVE_CXX11
+    row(row &&other);
+    row &operator=(row &&other);
+#endif
 
     void uppercase_column_names(bool forceToUpper);
     void add_properties(column_properties const& cp);

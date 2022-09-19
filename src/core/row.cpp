@@ -26,6 +26,31 @@ row::~row()
     clean_up();
 }
 
+#ifdef SOCI_HAVE_CXX11
+row::row(row &&other)
+{
+    *this = std::move(other);
+}
+
+row &row::operator=(row &&other)
+{
+    columns_              = std::move(other.columns_);
+    holders_              = std::move(other.holders_);
+    indicators_           = std::move(other.indicators_);
+    index_                = std::move(other.index_);
+    uppercaseColumnNames_ = std::move(other.uppercaseColumnNames_);
+    currentPos_           = std::move(other.currentPos_);
+
+    // Explicitly clear data from other, to avoid any double-freeing
+    other.columns_.clear();
+    other.holders_.clear();
+    other.indicators_.clear();
+    other.index_.clear();
+
+    return *this;
+}
+#endif
+
 void row::uppercase_column_names(bool forceToUpper)
 {
     uppercaseColumnNames_ = forceToUpper;
