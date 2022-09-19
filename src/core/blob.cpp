@@ -24,6 +24,25 @@ blob::~blob()
     delete backEnd_;
 }
 
+#ifdef SOCI_HAVE_CXX11
+
+blob::blob(blob &&other)
+{
+    *this = std::move(other);
+}
+
+blob &blob::operator=(blob &&other)
+{
+    backEnd_ = std::move(other.backEnd_);
+
+    // Explicitly null other.backEnd_ to avoid double-free
+    other.backEnd_ = NULL;
+
+    return *this;
+}
+
+#endif
+
 std::size_t blob::get_len()
 {
     return backEnd_->get_len();
