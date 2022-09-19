@@ -110,6 +110,46 @@ namespace std {
 #else
 # define SOCI_OVERRIDE
 #endif
+ 
+// Define SOCI_DEPRECATED
+// Partially taken from https://stackoverflow.com/a/21265197
+#if defined(__cplusplus) && __cplusplus >= 201402L
+// C++14 standardized the [[deprecated]] attribute
+# define SOCI_DEPRECATED(msg) [[deprecated(msg)]]
+#elif defined(__GNUC__) || defined(__clang__)
+# define SOCI_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#elif defined(_MSC_VER)
+# define SOCI_DEPRECATED(msg) __declspec(deprecated(msg))
+#else
+# pragma message("WARNING: SOCI_DEPRECATED not available for this compiler")
+# define SOCI_DEPRECATED(msg)
+#endif
+
+
+// Define SOCI_ALLOW_DEPRECATED_BEGIN and SOCI_ALLOW_DEPRECATED_END
+// Ref.: https://www.fluentcpp.com/2019/08/30/how-to-disable-a-warning-in-cpp/
+#if defined(__GNUC__) || defined(__clang__)
+# define SOCI_ALLOW_DEPRECATED_BEGIN \
+    _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated\"") \
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+# define SOCI_ALLOW_DEPRECATED_END \
+    _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
+# define SOCI_ALLOW_DEPRECATED_BEGIN \
+    __pragma(warning(push)) \
+    __pragma(warning(disable: 4973 )) \
+    __pragma(warning(disable: 4974 )) \
+    __pragma(warning(disable: 4995 )) \
+    __pragma(warning(disable: 4996 ))
+# define SOCI_ALLOW_DEPRECATED_END \
+    __pragma(warning(pop))
+# define SOCI_DONT_WARN(statement) statement
+#else
+# pragma message("WARNING: SOCI_ALLOW_DEPRECATED_* not available for this compilet")
+# define SOCI_ALLOW_DEPRECATED_BEGIN
+# define SOCI_ALLOW_DEPRECATED_END
+#endif
 
 namespace soci
 {
